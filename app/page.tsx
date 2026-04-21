@@ -20,12 +20,12 @@ async function HomePage() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6 glow-primary">
               <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">Premium Gaming Products</span>
+              <span className="text-sm font-medium text-primary">Store</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
               <span className="text-white">
-                {store?.title || 'Duster Theme'}
+                {store?.title || 'MemeMC'}
               </span>
             </h1>
 
