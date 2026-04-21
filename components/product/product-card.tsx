@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingCart, Zap, Check, ArrowRight, Sparkles } from 'lucide-react';
+import { ShoppingCart, Zap, Check, Sparkles } from 'lucide-react';
 import type { ProductGeneral } from '@/lib/schemas';
 import { useCart } from '@/hooks/use-cart';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,10 +28,10 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
 
   useEffect(() => {
     if (detailedProduct) {
-      const hasCustomFields = 'custom_fields' in detailedProduct && detailedProduct.custom_fields && detailedProduct.custom_fields.length > 0;
+      const hasCustomFields = 'custom_fields' in detailedProduct && detailedProduct.custom_fields && (detailedProduct.custom_fields as any[]).length > 0;
       const isSubscriptionWithChoice = detailedProduct.subscription && detailedProduct.onetime_sub === true;
-      const isDonation = 'donation' in detailedProduct && detailedProduct.donation === true;
-      const hasServerChoice = 'server_choice' in detailedProduct && detailedProduct.server_choice === true;
+      const isDonation = 'donation' in detailedProduct && (detailedProduct as any).donation === true;
+      const hasServerChoice = 'server_choice' in detailedProduct && (detailedProduct as any).server_choice === true;
       setNeedsCustomFields(hasCustomFields || isSubscriptionWithChoice || isDonation || hasServerChoice);
     }
   }, [detailedProduct]);
@@ -47,9 +47,8 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
 
     const subscriptionType = product.subscription ? 'recurring' : undefined;
     const currentInCart = cart.items.find((item) => item.product.id === product.id)?.quantity || 0;
-    
     if (typeof product.stock === 'number' && currentInCart + 1 > product.stock) return;
-    
+
     cart.addItem(product, 1, {}, subscriptionType);
     
     if (product.subscription && !needsCustomFields) {
@@ -68,17 +67,12 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.3 }}
       className="h-full"
     >
       <div className={`group relative h-full flex flex-col rounded-2xl bg-[#1b5e20] border border-white/10 transition-all duration-500 overflow-hidden shadow-xl ${
         isOutOfStock ? 'opacity-60 grayscale cursor-not-allowed' : 'hover:border-primary-light hover:shadow-primary/20'
       }`}>
         
-        {/* Glass Effect Overlay on Hover */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-
         {/* Badges */}
         <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 items-end">
           {product.featured && !hideFeaturedBadge && (
@@ -88,15 +82,15 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
           )}
           {product.percent_off && product.percent_off > 0 && (
             <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-red-500 text-white shadow-lg">
-              -{product.percent_off}% OFF
+              -{product.percent_off}%
             </span>
           )}
         </div>
 
-        {/* Image Area */}
+        {/* Image */}
         <div className="relative w-full h-56 bg-black/20 overflow-hidden flex items-center justify-center p-6">
           {product.image ? (
-            <motion.div className="relative w-full h-full" whileHover={{ scale: 1.1 }} transition={{ type: 'spring', stiffness: 300 }}>
+            <motion.div className="relative w-full h-full" whileHover={{ scale: 1.05 }}>
               <Image
                 src={product.image}
                 alt={product.name}
@@ -110,17 +104,16 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
           )}
         </div>
 
-        {/* Content Section */}
-        <div className="p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-black/20">
+        {/* Content */}
+        <div className="p-6 flex flex-col flex-grow">
           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary-lighter transition-colors">
             {product.name}
           </h3>
           
           <div className="text-sm text-text-secondary line-clamp-2 mb-6 min-h-[40px]">
-            {product.small_description ? stripHtml(product.small_description) : "Premium rank with exclusive server benefits."}
+            {product.small_description ? stripHtml(product.small_description) : "Click to see more details about this item."}
           </div>
 
-          {/* Pricing & Button */}
           <div className="mt-auto pt-4 border-t border-white/5">
             <div className="flex items-end justify-between mb-4">
               <div className="flex flex-col">
@@ -131,7 +124,6 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
                 )}
                 <span className="text-3xl font-black text-white tracking-tighter">
                   {product.price > 0 ? `$${product.price.toFixed(2)}` : 'FREE'}
-                  {product.subscription && <span className="text-xs font-normal opacity-60 ml-1">/mo</span>}
                 </span>
               </div>
             </div>
@@ -139,21 +131,21 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
             <button
               onClick={handleAddToCart}
               disabled={isOutOfStock || added}
-              className={`relative w-full py-4 rounded-xl font-bold uppercase tracking-widest text-sm transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden shadow-lg ${
+              className={`relative w-full py-4 rounded-xl font-bold uppercase tracking-widest text-sm transition-all duration-300 flex items-center justify-center gap-2 shadow-lg ${
                 added 
                   ? 'bg-primary-light text-white' 
-                  : 'bg-white text-primary-dark hover:bg-primary-lighter hover:scale-[1.02] active:scale-95'
-              } ${isOutOfStock ? 'bg-gray-700 cursor-not-allowed' : ''}`}
+                  : 'bg-white text-primary-dark hover:bg-primary-lighter hover:scale-[1.02]'
+              } ${isOutOfStock ? 'bg-gray-700 opacity-50 cursor-not-allowed' : ''}`}
             >
               <AnimatePresence mode="wait">
                 {added ? (
-                  <motion.div key="added" initial={{ y: 20 }} animate={{ y: 0 }} className="flex items-center gap-2">
-                    <Check className="w-5 h-5" /> Added!
+                  <motion.div key="added" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex items-center gap-2">
+                    <Check className="w-5 h-5" /> Added
                   </motion.div>
                 ) : (
-                  <motion.div key="add" initial={{ y: -20 }} animate={{ y: 0 }} className="flex items-center gap-2">
+                  <motion.div key="add" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex items-center gap-2">
                     <ShoppingCart className="w-5 h-5" /> 
-                    {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                    {isOutOfStock ? 'No Stock' : 'Add to Cart'}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -163,8 +155,8 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
       </div>
 
       <CustomFieldsModal
-        open={showModal}
-        onOpenChange={setShowModal}
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
         product={detailedProduct as any}
       />
     </motion.div>
