@@ -83,6 +83,8 @@ body {
     line-height: 1.6;
     position: relative;
     overflow-x: hidden;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Background floating gradients */
@@ -1168,11 +1170,11 @@ footer {
 
 /* Smooth hover lift */
 .hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
 .hover-lift:hover {
-    transform: translateY(-6px);
+    transform: translateY(-7px);
     box-shadow: 0 10px 25px rgba(76, 175, 80, 0.3);
 }
 
@@ -1196,7 +1198,7 @@ footer {
 
 /* Card hover glow */
 .card-glow:hover {
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.4);
+    box-shadow: 0 0 20px rgba(140, 247, 144);
     border-color: var(--primary-light);
 }
 
