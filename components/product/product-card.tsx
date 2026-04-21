@@ -22,23 +22,39 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
   const [added, setAdded] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [needsCustomFields, setNeedsCustomFields] = useState(false);
-  const { data: detailedProduct } = useProduct(product.slug);
   
-  const isOutOfStock = typeof product.stock === 'number' && product.stock === 0;
+  // Fetch detailed data safely
+  const { data: detailedProduct } = useProduct(product?.slug || '');
+  
+  const isOutOfStock = typeof product?.stock === 'number' && product?.stock === 0;
 
   useEffect(() => {
+    // Check detailedProduct exists AND has the properties we need safely
     if (detailedProduct) {
-      const hasCustomFields = 'custom_fields' in detailedProduct && detailedProduct.custom_fields && (detailedProduct.custom_fields as any[]).length > 0;
-      const isSubscriptionWithChoice = detailedProduct.subscription && detailedProduct.onetime_sub === true;
-      const isDonation = 'donation' in detailedProduct && (detailedProduct as any).donation === true;
-      const hasServerChoice = 'server_choice' in detailedProduct && (detailedProduct as any).server_choice === true;
-      setNeedsCustomFields(hasCustomFields || isSubscriptionWithChoice || isDonation || hasServerChoice);
+      const hasCustomFields = 
+        'custom_fields' in detailedProduct && 
+        Array.isArray(detailedProduct.custom_fields) && 
+        detailedProduct.custom_fields.length > 0;
+
+      const isSubscriptionWithChoice = 
+        detailedProduct?.subscription && 
+        detailedProduct?.onetime_sub === true;
+
+      const isDonation = 
+        'donation' in detailedProduct && 
+        (detailedProduct as any).donation === true;
+
+      const hasServerChoice = 
+        'server_choice' in detailedProduct && 
+        (detailedProduct as any).server_choice === true;
+
+      setNeedsCustomFields(!!(hasCustomFields || isSubscriptionWithChoice || isDonation || hasServerChoice));
     }
   }, [detailedProduct]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isOutOfStock) return;
+    if (isOutOfStock || !product) return;
 
     if (needsCustomFields && detailedProduct) {
       setShowModal(true);
@@ -47,6 +63,7 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
 
     const subscriptionType = product.subscription ? 'recurring' : undefined;
     const currentInCart = cart.items.find((item) => item.product.id === product.id)?.quantity || 0;
+    
     if (typeof product.stock === 'number' && currentInCart + 1 > product.stock) return;
 
     cart.addItem(product, 1, {}, subscriptionType);
@@ -60,7 +77,7 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '').trim();
+  const stripHtml = (html: string) => html ? html.replace(/<[^>]*>/g, '').trim() : "";
 
   return (
     <motion.div 
@@ -75,25 +92,25 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
         
         {/* Badges */}
         <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 items-end">
-          {product.featured && !hideFeaturedBadge && (
+          {product?.featured && !hideFeaturedBadge && (
             <span className="flex items-center gap-1 px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-primary-light text-white shadow-lg animate-pulse">
               <Sparkles className="w-3 h-3" /> Featured
             </span>
           )}
-          {product.percent_off && product.percent_off > 0 && (
+          {product?.percent_off && product.percent_off > 0 && (
             <span className="px-3 py-1 text-[10px] font-bold rounded-full bg-red-500 text-white shadow-lg">
               -{product.percent_off}%
             </span>
           )}
         </div>
 
-        {/* Image */}
+        {/* Image Area */}
         <div className="relative w-full h-56 bg-black/20 overflow-hidden flex items-center justify-center p-6">
-          {product.image ? (
+          {product?.image ? (
             <motion.div className="relative w-full h-full" whileHover={{ scale: 1.05 }}>
               <Image
                 src={product.image}
-                alt={product.name}
+                alt={product.name || 'Product'}
                 fill
                 className="object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
                 unoptimized
@@ -104,26 +121,27 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
           )}
         </div>
 
-        {/* Content */}
+        {/* Content Section */}
         <div className="p-6 flex flex-col flex-grow">
           <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary-lighter transition-colors">
-            {product.name}
+            {product?.name || "Loading..."}
           </h3>
           
           <div className="text-sm text-text-secondary line-clamp-2 mb-6 min-h-[40px]">
-            {product.small_description ? stripHtml(product.small_description) : "Click to see more details about this item."}
+            {product?.small_description ? stripHtml(product.small_description) : "Premium rank with exclusive server benefits."}
           </div>
 
           <div className="mt-auto pt-4 border-t border-white/5">
             <div className="flex items-end justify-between mb-4">
               <div className="flex flex-col">
-                {product.old_price && product.old_price > product.price && (
+                {product?.old_price && product.old_price > product.price && (
                   <span className="text-sm text-white/40 line-through decoration-red-500">
                     ${product.old_price.toFixed(2)}
                   </span>
                 )}
                 <span className="text-3xl font-black text-white tracking-tighter">
-                  {product.price > 0 ? `$${product.price.toFixed(2)}` : 'FREE'}
+                  {product?.price && product.price > 0 ? `$${product.price.toFixed(2)}` : 'FREE'}
+                  {product?.subscription && <span className="text-xs font-normal opacity-60 ml-1">/mo</span>}
                 </span>
               </div>
             </div>
@@ -139,11 +157,11 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
             >
               <AnimatePresence mode="wait">
                 {added ? (
-                  <motion.div key="added" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex items-center gap-2">
+                  <motion.div key="added" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} className="flex items-center gap-2">
                     <Check className="w-5 h-5" /> Added
                   </motion.div>
                 ) : (
-                  <motion.div key="add" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex items-center gap-2">
+                  <motion.div key="add" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} className="flex items-center gap-2">
                     <ShoppingCart className="w-5 h-5" /> 
                     {isOutOfStock ? 'No Stock' : 'Add to Cart'}
                   </motion.div>
