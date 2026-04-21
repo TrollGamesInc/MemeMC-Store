@@ -41,7 +41,7 @@ export default async function RootLayout({
             <main className="flex-1">
               {children}
             </main>
-            <Footer initialStore={initialStore} />
+            <Footer />
           </div>
         </QueryProvider>
       </body>
