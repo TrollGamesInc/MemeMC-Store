@@ -85,29 +85,29 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
           <div className="absolute top-3 right-3 z-10 flex flex-col gap-2 items-end">
             {/* Non-recurring discount badge - shows period and normal price after first payment */}
             {product.subscription && product.recurring_discount === false && product.old_price && product.old_price > product.price && product.period_num && product.duration_periodicity && (
-              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-primary/70 text-primary bg-background/60">
+              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-primary/70 text-primary bg-background/60 backdrop-blur-sm">
                 {product.period_num} {product.duration_periodicity}{product.period_num > 1 ? 's' : ''} at ${product.old_price.toFixed(2)}
               </span>
             )}
             {product.featured && !hideFeaturedBadge && (
-              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-primary/70 text-primary bg-background/60">
+              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-primary/70 text-primary bg-background/60 backdrop-blur-sm">
                 Featured
               </span>
             )}
             {product.percent_off && product.percent_off > 0 && product.price > 0 && (
-              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-primary/70 text-primary bg-background/60">
+              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-primary/70 text-primary bg-background/60 backdrop-blur-sm">
                 -{product.percent_off}%
               </span>
             )}
             {typeof product.stock === 'number' && (
-              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-red-500/70 text-red-400 bg-background/60">
+              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-red-500/70 text-red-400 bg-background/60 backdrop-blur-sm">
                 {product.stock === 0 ? 'Out of stock' : `Stock: ${product.stock}`}
               </span>
             )}
           </div>
 
           {/* Image */}
-          <div className="relative w-full h-48 bg-gradient-card overflow-hidden">
+          <div className="relative w-full h-48 bg-gradient-to-br from-primary/10 to-secondary/10 overflow-hidden">
             {product.image ? (
               <Image
                 src={product.image}
@@ -133,7 +133,7 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
               {product.name}
             </h3>
             
-            <div className="min-h-[44px] text-sm text-muted">
+            <div className="min-h-[44px] text-sm text-muted-foreground">
               {product.small_description ? (
                 <p className="line-clamp-2">{stripHtml(product.small_description)}</p>
               ) : (
@@ -142,7 +142,7 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
             </div>
 
             {/* Price & CTA */}
-            <div className="space-y-3">
+            <div className="space-y-3 mt-auto">
               <div className="flex items-center justify-between">
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-primary">
@@ -151,12 +151,12 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
                   {/* For subscriptions with non-recurring discount, show "then original price / period" */}
                   {product.subscription && product.recurring_discount === false && product.old_price && product.old_price > product.price ? (
                     <>
-                      <span className="text-sm text-muted">then</span>
-                      <span className="text-sm text-muted">
+                      <span className="text-sm text-muted-foreground">then</span>
+                      <span className="text-sm text-muted-foreground">
                         ${product.old_price.toFixed(2)}
                       </span>
                       {product.period_num && product.duration_periodicity && (
-                        <span className="text-sm text-muted">
+                        <span className="text-sm text-muted-foreground">
                           / {product.period_num > 1 ? `${product.period_num} ` : ''}{product.duration_periodicity}
                           {product.period_num > 1 ? 's' : ''}
                         </span>
@@ -165,13 +165,13 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
                   ) : (
                     <>
                       {product.subscription && product.period_num && product.duration_periodicity && (
-                        <span className="text-sm text-muted">
+                        <span className="text-sm text-muted-foreground">
                           / {product.period_num > 1 ? `${product.period_num} ` : ''}{product.duration_periodicity}
                           {product.period_num > 1 ? 's' : ''}
                         </span>
                       )}
                       {product.old_price && product.old_price > 0 && product.old_price > product.price ? (
-                        <span className="text-sm text-muted line-through">
+                        <span className="text-sm text-muted-foreground line-through">
                           ${product.old_price.toFixed(2)}
                         </span>
                       ) : null}
@@ -188,8 +188,8 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
                     isOutOfStock 
                       ? 'bg-muted/50 cursor-not-allowed' 
                       : added 
-                        ? 'bg-green-500 glow-primary' 
-                        : 'bg-primary hover:bg-primary/90 glow-primary'
+                        ? 'bg-green-500 shadow-lg shadow-green-500/30' 
+                        : 'bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30'
                   }`}
                   aria-label={product.subscription && !needsCustomFields ? 'Subscribe' : 'Add to cart'}
                   disabled={isOutOfStock}
