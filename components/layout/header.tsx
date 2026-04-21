@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { ShoppingCart, Menu, X, Home, Book, Handshake, Users, Gavel, Plug } from 'lucide-react';
 import { useStore } from '@/hooks/use-api';
 import { useCart } from '@/hooks/use-cart';
 import { useState, useEffect } from 'react';
@@ -21,7 +21,6 @@ export function Header({ initialStore }: HeaderProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [prevCount, setPrevCount] = useState(0);
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
@@ -30,175 +29,119 @@ export function Header({ initialStore }: HeaderProps) {
 
   const cartItemCount = cart.getItemCount();
 
-  useEffect(() => {
-    if (mounted && cartItemCount > prevCount) {
-      setAnimate(true);
-      setTimeout(() => setAnimate(false), 600);
-    }
-    setPrevCount(cartItemCount);
-  }, [cartItemCount, mounted, prevCount]);
-
   const isActive = (path: string) => {
     if (path === '/') return pathname === '/';
     return pathname.startsWith(path);
   };
 
+  const copyToClipboard = (text: string) => {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(text);
+      alert('IP copied to clipboard!');
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-12 gap-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            {store?.logo ? (
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden group-hover:scale-105 transition-transform">
-                <Image
-                  src={store.logo}
-                  alt={store.title || 'Store'}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-              </div>
-            ) : (
-              <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center text-2xl font-bold text-white">
-                {store?.title?.[0] || 'D'}
-              </div>
-            )}
-            <span className="text-xl font-bold text-white">
-              {store?.title || 'Store'}
-            </span>
+    <header className="glass-nav sticky top-0 z-50">
+      <div className="nav-container">
+        {/* Logo Section */}
+        <Link href="/" className="logo">
+          {store?.logo ? (
+            <div className="relative w-[42px] height-[42px]">
+               <Image
+                src={store.logo}
+                alt="MemeMC Logo"
+                width={42}
+                height={42}
+                className="logo-img"
+                unoptimized
+              />
+            </div>
+          ) : (
+            <div className="logo-img bg-primary flex items-center justify-center text-white font-bold">
+              {store?.title?.[0] || 'M'}
+            </div>
+          )}
+          <span className="logo-text">{store?.title || 'MemeMC'}</span>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <div className="nav-links hidden md:flex">
+          <Link href="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>
+            <Home className="w-4 h-4" />
+            <span>Home</span>
+          </Link>
+          
+          <Link href="/rules" className={`nav-link ${isActive('/rules') ? 'active' : ''}`}>
+            <Book className="w-4 h-4" />
+            <span>Rules</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            {isActive('/') ? (
-              <span className="text-sm text-white font-semibold cursor-default">
-                Home
-              </span>
-            ) : (
-              <Link href="/" className="text-sm text-foreground/80 hover:text-foreground transition-colors">
-                Home
-              </Link>
-            )}
-            {isActive('/shop') ? (
-              <span className="text-sm text-white font-semibold cursor-default">
-                Shop
-              </span>
-            ) : (
-              <Link href="/shop" className="text-sm text-foreground/80 hover:text-foreground transition-colors">
-                Shop
-              </Link>
-            )}
-            {isActive('/shop') ? (
-              <span className="text-sm text-white font-semibold cursor-default">
-                Shop
-              </span>
-            ) : (
-              <Link href="/shop" className="text-sm text-foreground/80 hover:text-foreground transition-colors">
-                Shop
-              </Link>
-            )}
-            {store?.menu_links?.map((menuLink, index) => (
-              <a
-                key={index}
-                href={menuLink.link.trim()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-foreground/80 hover:text-foreground transition-colors"
-              >
-                {menuLink.title}
-              </a>
-            ))}
-            <Link href="/cart" className="relative">
-              <div className="flex items-center gap-4 px-6 py-2 rounded-lg bg-card border border-border hover:border-primary transition-colors">
-                <ShoppingCart className="w-5 h-5" />
-                <span className="text-sm font-medium">Cart</span>
-                <AnimatePresence>
-                  {mounted && cartItemCount > 0 && (
-                    <motion.span
-                      key={cartItemCount}
-                      initial={{ scale: 0 }}
-                      animate={{ 
-                        scale: animate ? [1, 1.5, 1] : 1,
-                        rotate: animate ? [0, 10, -10, 0] : 0
-                      }}
-                      exit={{ scale: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-background text-xs font-bold flex items-center justify-center glow-primary"
-                    >
-                      {cartItemCount}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </div>
-            </Link>
-          </nav>
+          <Link href="/partners" className={`nav-link ${isActive('/partners') ? 'active' : ''}`}>
+            <Handshake className="w-4 h-4" />
+            <span>Partners</span>
+          </Link>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 cursor-pointer"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          <Link href="/staff" className={`nav-link ${isActive('/staff') ? 'active' : ''}`}>
+            <Users className="w-4 h-4" />
+            <span>Staff</span>
+          </Link>
+
+          <Link href="/punishments" className={`nav-link ${isActive('/punishments') ? 'active' : ''}`}>
+            <Gavel className="w-4 h-4" />
+            <span>Punishments</span>
+          </Link>
+
+          {/* Dynamic Store/Cart Button */}
+          <Link href="/shop" className="btn btn-store relative group">
+            <ShoppingCart className="w-4 h-4" />
+            <span>Store</span>
+            <AnimatePresence>
+              {mounted && cartItemCount > 0 && (
+                <motion.span
+                  key={cartItemCount}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-white text-primary text-[10px] font-bold flex items-center justify-center shadow-lg"
+                >
+                  {cartItemCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Link>
+
+          <button onClick={() => copyToClipboard('mememc.club')} className="btn btn-join cursor-pointer">
+            <Plug className="w-4 h-4" />
+            <span>Copy IP</span>
           </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden py-4 space-y-2 border-t border-border">
-            <Link 
-              href="/" 
-              className="block py-2 text-foreground/80 hover:text-foreground transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link 
-              href="/shop" 
-              className="block py-2 text-foreground/80 hover:text-foreground transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Shop
-            </Link>
-            {store?.menu_links?.map((menuLink, index) => (
-              <a
-                key={index}
-                href={menuLink.link.trim()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block py-2 text-foreground/80 hover:text-foreground transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {menuLink.title}
-              </a>
-            ))}
-            <Link 
-              href="/cart" 
-              className="flex items-center justify-between py-2 text-foreground/80 hover:text-foreground transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <span>Cart</span>
-              <AnimatePresence>
-                {cartItemCount > 0 && (
-                  <motion.span
-                    key={cartItemCount}
-                    initial={{ scale: 0 }}
-                    animate={{ 
-                      scale: animate ? [1, 1.5, 1] : 1,
-                      rotate: animate ? [0, 10, -10, 0] : 0
-                    }}
-                    exit={{ scale: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-6 h-6 rounded-full bg-primary text-background text-xs font-bold flex items-center justify-center"
-                  >
-                    {cartItemCount}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Link>
-          </nav>
-        )}
+        {/* Mobile Toggle */}
+        <button 
+          className="mobile-menu-btn md:hidden"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X /> : <Menu />}
+        </button>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="md:hidden flex flex-col p-4 space-y-4 bg-background border-t border-border"
+          >
+            <Link href="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            <Link href="/rules" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Rules</Link>
+            <Link href="/partners" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Partners</Link>
+            <Link href="/shop" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Store ({cartItemCount})</Link>
+            <button onClick={() => copyToClipboard('mememc.club')} className="btn btn-join w-full">Copy IP</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
