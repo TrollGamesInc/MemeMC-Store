@@ -1,6 +1,6 @@
 export const config = {
   api: {
-    baseUrl: process.env.TIP4SERV_API_BASE || 'https://api.store.mememc.club/v1',
+    baseUrl: process.env.TIP4SERV_API_BASE || 'https://api.tip4serv.com/v1',
     key: process.env.TIP4SERV_API_KEY || '',
   },
   app: {
