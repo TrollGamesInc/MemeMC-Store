@@ -1,176 +1,131 @@
-'use client';
+import Link from "next/link";
+import { 
+  FaDiscord, 
+  FaTiktok, 
+  FaInstagram, 
+  FaXTwitter, 
+  FaYoutube, 
+  FaStore 
+} from "react-icons/fa6";
+import { FaSignal } from "react-icons/fa";
 
-import Link from 'next/link';
-import { useStore } from '@/hooks/use-api';
-import { FaFacebook, FaInstagram, FaYoutube, FaTwitch, FaDiscord, FaTiktok, FaSteam } from 'react-icons/fa';
-import { SiX } from 'react-icons/si';
-import type { Store } from '@/lib/schemas';
-
-interface FooterProps {
-  initialStore?: Store | null;
-}
-
-export function Footer({ initialStore }: FooterProps) {
-  const { data: fetchedStore } = useStore();
-  const store = fetchedStore || initialStore;
-  const currentYear = new Date().getFullYear();
-
-  // Strip HTML tags from description
-  const stripHtml = (html: string) => {
-    return html.replace(/<[^>]*>/g, '').trim();
-  };
-
+export function Footer() {
   return (
-    <footer className="border-t border-border bg-card mt-auto">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Brand */}
-          <div>
-            <h3 className="text-lg font-bold mb-2">{store?.title || 'Duster Theme'}</h3>
-            <p className="text-sm text-muted">
-              {store?.description ? stripHtml(store.description) : 'Premium gaming products and services'}
-            </p>
+    <footer className="bg-gradient-to-r from-gray-900 to-black text-white border-t border-gray-800">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Brand Section */}
+          <div className="animate-fadeIn">
+            <div className="flex items-center space-x-4">
+              <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
+              <div>
+                <h3 className="text-2xl font-bold">MemeMC</h3>
+                <p className="text-gray-400">Craft. Laugh. Repeat.</p>
+              </div>
+            </div>
           </div>
-
+          
+          {/* Social Links */}
+          <div className="animate-fadeIn">
+            <h4 className="text-lg font-semibold mb-4">Connect With Us</h4>
+            <div className="flex space-x-4">
+              <a 
+                href="https://dsc.gg/mememc" 
+                target="_blank" 
+                className="bg-indigo-600 hover:bg-indigo-700 p-3 rounded-full transition-colors"
+                aria-label="Discord"
+              >
+                <FaDiscord className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://tiktok.com/@mememcclub" 
+                target="_blank" 
+                className="bg-black hover:bg-gray-900 p-3 rounded-full transition-colors"
+                aria-label="TikTok"
+              >
+                <FaTiktok className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://instagram.com/mememcclub" 
+                target="_blank" 
+                className="bg-pink-600 hover:bg-pink-700 p-3 rounded-full transition-colors"
+                aria-label="Instagram"
+              >
+                <FaInstagram className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://x.com/mememcclub" 
+                target="_blank" 
+                className="bg-gray-900 hover:bg-black p-3 rounded-full transition-colors"
+                aria-label="X"
+              >
+                <FaXTwitter className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://youtube.com/@mememcclub" 
+                target="_blank" 
+                className="bg-red-600 hover:bg-red-700 p-3 rounded-full transition-colors"
+                aria-label="YouTube"
+              >
+                <FaYoutube className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://store.mememc.club" 
+                target="_blank" 
+                className="bg-green-600 hover:bg-green-700 p-3 rounded-full transition-colors"
+                aria-label="Store"
+              >
+                <FaStore className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+          
           {/* Quick Links */}
-          <div className="md:ml-auto">
-            <h3 className="text-sm font-semibold mb-3">Quick Links</h3>
-            <div className="grid grid-cols-2 gap-x-12 gap-y-2">
-              <Link href="/" className="text-sm text-muted hover:text-foreground transition-colors text-left">
-                Home
-              </Link>
-              <Link href="/shop" className="text-sm text-muted hover:text-foreground transition-colors text-left">
-                Shop
-              </Link>
-              <Link href="/cart" className="text-sm text-muted hover:text-foreground transition-colors text-left">
-                Cart
-              </Link>
-              {store?.menu_links?.map((menuLink, index) => (
-                <a
-                  key={index}
-                  href={menuLink.link.trim()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted hover:text-foreground transition-colors text-left"
-                >
-                  {menuLink.title}
-                </a>
-              ))}
+          <div className="animate-fadeIn delay-150">
+            <div className="link-group">
+              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/" className="flex items-center text-gray-300 hover:text-white transition-colors">
+                    <span className="mr-2">›</span> Home
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/rules" className="flex items-center text-gray-300 hover:text-white transition-colors">
+                    <span className="mr-2">›</span> Rules
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/partners" className="flex items-center text-gray-300 hover:text-white transition-colors">
+                    <span className="mr-2">›</span> Partners
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/staff" className="flex items-center text-gray-300 hover:text-white transition-colors">
+                    <span className="mr-2">›</span> Staff
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/punishments" className="flex items-center text-gray-300 hover:text-white transition-colors">
+                    <span className="mr-2">›</span> Punishments
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-
-        {/* Social Media Links */}
-        {store?.social_medias && (
-          <div className="mt-8 pt-8 border-t border-border">
-            <h3 className="text-sm font-semibold mb-4 text-center">Follow Us</h3>
-            <div className="flex justify-center gap-4 flex-wrap">
-              {store.social_medias.facebook && (
-                <a
-                  href={store.social_medias.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors"
-                  aria-label="Facebook"
-                >
-                  <FaFacebook className="w-5 h-5" />
-                </a>
-              )}
-              {store.social_medias.instagram && (
-                <a
-                  href={store.social_medias.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors"
-                  aria-label="Instagram"
-                >
-                  <FaInstagram className="w-5 h-5" />
-                </a>
-              )}
-              {store.social_medias.twitter && (
-                <a
-                  href={store.social_medias.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors"
-                  aria-label="X"
-                >
-                  <SiX className="w-5 h-5" />
-                </a>
-              )}
-              {store.social_medias.youtube && (
-                <a
-                  href={store.social_medias.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors"
-                  aria-label="YouTube"
-                >
-                  <FaYoutube className="w-5 h-5" />
-                </a>
-              )}
-              {store.social_medias.tiktok && (
-                <a
-                  href={store.social_medias.tiktok}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors"
-                  aria-label="TikTok"
-                >
-                  <FaTiktok className="w-5 h-5" />
-                </a>
-              )}
-              {store.social_medias.discord && (
-                <a
-                  href={store.social_medias.discord}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors"
-                  aria-label="Discord"
-                >
-                  <FaDiscord className="w-5 h-5" />
-                </a>
-              )}
-              {store.social_medias.twitch && (
-                <a
-                  href={store.social_medias.twitch}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors"
-                  aria-label="Twitch"
-                >
-                  <FaTwitch className="w-5 h-5" />
-                </a>
-              )}
-              {store.social_medias.steam && (
-                <a
-                  href={store.social_medias.steam}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors"
-                  aria-label="Steam"
-                >
-                  <FaSteam className="w-5 h-5" />
-                </a>
-              )}
-            </div>
-          </div>
-        )}
-
-        <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted">
-          <p>&copy; {currentYear} {store?.title || 'Duster Theme'}. Powered by Tip4Serv API.</p>
-          <p className="mt-2">
-            <a
-              href="https://github.com/Tip4Serv/duster-theme"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
+        
+        {/* Footer Bottom */}
+        <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
+          <p className="mb-2">
+            <a 
+              href="status" 
+              target="_blank" 
+              className="inline-flex items-center hover:text-white transition-colors"
             >
-              Source Code
+              <FaSignal className="mr-2" /> MemeMC Status
             </a>
           </p>
+          <p className="mb-2">© 2025 MemeMC. All rights reserved.</p>
+          <p>Minecraft is a trademark of Mojang Studios. Not affiliated with Mojang or Microsoft.</p>
         </div>
-      </div>
-    </footer>
-  );
-}
