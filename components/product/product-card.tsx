@@ -90,7 +90,7 @@ export function ProductCard({ product, hideFeaturedBadge = false }: ProductCardP
               </span>
             )}
             {product.featured && !hideFeaturedBadge && (
-              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-primary/70 text-primary bg-background/60 backdrop-blur-sm">
+              <span className="px-3 py-1.5 text-xs font-semibold rounded-full border border-primary/70 text-primary bg-background/60 backdrop-blur-sm mx-auto table">
                 Featured
               </span>
             )}
