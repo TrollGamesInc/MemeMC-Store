@@ -8,7 +8,6 @@ import {
   FaStore,
   FaSignal
 } from "react-icons/fa6";
-import type { Route } from "next";
 
 export function Footer() {
   return (
@@ -81,27 +80,27 @@ export function Footer() {
             <h4>Quick Links</h4>
             <ul>
               <li>
-                <Link href="/" as={Route<"/">}>
+                <Link href="/">
                   <span>›</span> Home
                 </Link>
               </li>
               <li>
-                <Link href="/rules" as={Route<"/rules">}>
+                <Link href="/rules">
                   <span>›</span> Rules
                 </Link>
               </li>
               <li>
-                <Link href="/partners" as={Route<"/partners">}>
+                <Link href="/partners">
                   <span>›</span> Partners
                 </Link>
               </li>
               <li>
-                <Link href="/staff" as={Route<"/staff">}>
+                <Link href="/staff">
                   <span>›</span> Staff
                 </Link>
               </li>
               <li>
-                <Link href="/punishments" as={Route<"/punishments">}>
+                <Link href="/punishments">
                   <span>›</span> Punishments
                 </Link>
               </li>
