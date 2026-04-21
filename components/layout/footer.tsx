@@ -129,3 +129,5 @@ export function Footer() {
           <p className="mb-2">© 2025 MemeMC. All rights reserved.</p>
           <p>Minecraft is a trademark of Mojang Studios. Not affiliated with Mojang or Microsoft.</p>
         </div>
+      </div>
+    </footer>
