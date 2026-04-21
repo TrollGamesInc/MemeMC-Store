@@ -45,7 +45,7 @@ export function Header({ initialStore }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-12 gap-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
@@ -65,7 +65,7 @@ export function Header({ initialStore }: HeaderProps) {
               </div>
             )}
             <span className="text-xl font-bold text-white">
-              {store?.title || 'Duster Theme'}
+              {store?.title || 'Store'}
             </span>
           </Link>
 
@@ -89,6 +89,15 @@ export function Header({ initialStore }: HeaderProps) {
                 Shop
               </Link>
             )}
+            {isActive('/shop') ? (
+              <span className="text-sm text-white font-semibold cursor-default">
+                Shop
+              </span>
+            ) : (
+              <Link href="/shop" className="text-sm text-foreground/80 hover:text-foreground transition-colors">
+                Shop
+              </Link>
+            )}
             {store?.menu_links?.map((menuLink, index) => (
               <a
                 key={index}
@@ -101,7 +110,7 @@ export function Header({ initialStore }: HeaderProps) {
               </a>
             ))}
             <Link href="/cart" className="relative">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border hover:border-primary transition-colors">
+              <div className="flex items-center gap-4 px-6 py-2 rounded-lg bg-card border border-border hover:border-primary transition-colors">
                 <ShoppingCart className="w-5 h-5" />
                 <span className="text-sm font-medium">Cart</span>
                 <AnimatePresence>
