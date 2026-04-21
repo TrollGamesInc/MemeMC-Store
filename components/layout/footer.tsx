@@ -80,29 +80,29 @@ export function Footer() {
             <h4>Quick Links</h4>
             <ul>
               <li>
-                <Link href="/">
+                <a href="/">
                   <span>›</span> Home
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/rules">
+                <a href="/rules">
                   <span>›</span> Rules
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/partners">
+                <a href="/partners">
                   <span>›</span> Partners
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/staff">
+                <a href="/staff">
                   <span>›</span> Staff
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/punishments">
+                <a href="/punishments">
                   <span>›</span> Punishments
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
